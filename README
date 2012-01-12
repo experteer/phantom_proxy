@@ -1,0 +1,11 @@
+Install:
+rake build
+rake install
+
+Uninstall:
+rake uninstall
+
+
+Usage:
+now call from bash with any thin server parameter you want
+	phantom_proxy //{your parameters}
