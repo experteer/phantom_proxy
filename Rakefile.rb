@@ -5,13 +5,13 @@ task :build do
 end
 
 task :install do
-	sh "gem install phantomjs_proxy-*.gem"
+	sh "gem install phantom_proxy-*.gem"
 end
 
 task :uninstall do
-	sh "gem uninstall phantomjs_proxy"
+	sh "gem uninstall phantom_proxy"
 end
 
 task :clean do
-	sh "rm phantomjs_proxy-*.gem"
+	sh "rm phantom_proxy-*.gem"
 end
