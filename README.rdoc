@@ -1,0 +1,37 @@
+== Phantom Proxy - A webkit proxy
+The phantom proxy acts as a http proxy server. It fetches the remote webpages
+with the help phantomjs (see http://www.phantomjs.org/ ).
+
+You can use this to get a page after the javascipt execution. By setting some HTTP
+headers you can get the page with all iframes included or as an image. 
+
+== Installation
+Install phanotmjs (see: http://code.google.com/p/phantomjs/wiki/BuildInstructions)
+
+On Debian:
+
+ sudo apt-get install libqt4-dev libqtwebkit-dev qt4-qmake
+ cd phantom
+ git clone https://github.com/ariya/phantomjs.git
+ git checkout 1.2
+ qmake-qt4 && make
+
+ checkout phantom_proxy
+ 
+ rake build
+ rake install
+         
+== Usage
+Run
+ phantom_proxy 
+with any thin parameter you want (e.g. -p 8080).
+
+Point your browser's proxy to http://localhost:8080 for testting.
+
+You can use the Net::HTTP lib to fetch page or use the phantom_client 
+(see: https://github.com/experteer/phantom_client).
+ 
+== TODO
+- make a gem out of this
+- enable css/image loading again by default
+- keeping sessions (just an idea)

@@ -1,5 +1,7 @@
-phantomjs_proxy-*.gem
+phantom_proxy-*.gem
 .rvmrc
 
 #IDE
 .redcar
+doc
+!.keep
