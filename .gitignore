@@ -1,2 +1,5 @@
 phantomjs_proxy-*.gem
 .rvmrc
+
+#IDE
+.redcar
