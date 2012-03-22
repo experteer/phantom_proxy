@@ -11,12 +11,7 @@ require 'rack'
 require 'daemons'
 
 module PhantomJSProxy
-	ROOT = File.expand_path(File.dirname(__FILE__))+"/../lib"
-	CONFIG = ROOT+"/config.ru"
-	SERVER = ROOT+"/phantomjsserver"
-	PHANTOMJS = ROOT+"/phantomjs"
-	SCRIPT = ROOT+"/scripts/proxy.js"
-	PHANTOMJS_BIN = File.expand_path(File.dirname(__FILE__))+'/phantomjs'
+	CONFIG = File.expand_path(File.dirname(__FILE__))+"/../lib/phantom_proxy/config.ru"
 end
 
 # Become a daemon

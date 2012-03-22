@@ -17,9 +17,17 @@ module PhantomJSProxy
 			
 			env['rack.errors'].write("Extract the uri\n")
 			
-			picture = env['HTTP_GET_PAGE_AS_IMAGE']
-			
-			loadFrames = env['HTTP_GET_PAGE_WITH_IFRAMES']
+      if defined? env['HTTP_GET_PAGE_AS_IMAGE']
+			  picture = env['HTTP_GET_PAGE_AS_IMAGE']
+      else
+        picture = true
+      end
+      
+			if defined? env['HTTP_GET_PAGE_WITH_IFRAMES']
+        loadFrames = env['HTTP_GET_PAGE_WITH_IFRAMES']
+      else
+        loadFrames = false
+      end
 			
 			phJS.getUrl(env['REQUEST_URI']+'?'+params, picture, loadFrames)
 				

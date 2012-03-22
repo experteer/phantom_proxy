@@ -1,2 +1,2 @@
 #bash
-bin/phantomjs lib/scripts/proxy_test.js tmp/picture.png true http://dl.dropbox.com/u/36978459/index.html > tmp/log.txt
+bin/phantomjs lib/phantom_proxy/scripts/proxy.js tmp/picture.png true http://dl.dropbox.com/u/36978459/index.html > tmp/log.txt

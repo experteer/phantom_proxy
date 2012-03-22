@@ -1,5 +1,5 @@
-require PhantomJSProxy::PHANTOMJS
-require PhantomJSProxy::SERVER
+require 'rubygems'
+require 'phantom_proxy'
 
 # You can install Rack middlewares
 # to do some crazy stuff like logging,

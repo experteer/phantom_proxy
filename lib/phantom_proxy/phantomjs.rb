@@ -1,3 +1,5 @@
+require 'tempfile'
+
 module PhantomJSProxy
 	class PhantomJS
 		attr_accessor :dom
@@ -14,6 +16,12 @@ module PhantomJSProxy
 			
 			pictureFile = nil
 			picture = "none"
+      
+      loadFrames = "false"
+      
+      if loadIFrames
+        loadFrames = "true"
+      end
 			
 			if pictureOnly
 				if !File.directory?("/tmp/phantomjs_proxy")
@@ -35,7 +43,7 @@ module PhantomJSProxy
 				end
 			end
 			
-			@dom = invokePhantomJS(SCRIPT, [picture, loadIFrames, url, url_args])
+			@dom = invokePhantomJS(SCRIPT, [picture, loadFrames, url, url_args])
 			
 			puts("Opened page: "+ /Open page: (.*?) END/.match(@dom)[1])
 			
@@ -68,6 +76,7 @@ module PhantomJSProxy
 			puts("Call phantomJS with: "+argString)
 			out = IO.popen(PHANTOMJS_BIN+" --cookies-file=/tmp/phantomjs_proxy/cookies.txt "+script+argString)
 			o = out.readlines.join
+      puts("PHANTOMJS_OUT: "+o)
 			return o
 		end
 	end

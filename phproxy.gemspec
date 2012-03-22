@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'rake'
 
 Gem::Specification.new do |s|
@@ -9,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = 'suddani@googlemail.com'
   s.files       = FileList['lib/**/*.rb',
   										'lib/**/*.js',
-                      'lib/*.ru',
+                      'lib/**/**/*.ru',
                       'bin/*',
                       '[A-Z]*',
                       'test/**/*'].to_a
