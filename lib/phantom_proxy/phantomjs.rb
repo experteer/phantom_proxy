@@ -32,18 +32,19 @@ module PhantomJSProxy
 			end
 			
 			url_args = ""
-			
+			url_args_ = []
+      
 			if /\?/.match(url)
 				url_args = url.split('?')[1]
 				url = url.split('?')[0]
 				
 				if url_args
-					url_args = url_args.split('&')
-					url_args = url_args.join(' ')
+					url_args_ = url_args.split('&')
+					url_args = url_args_.join(' ')
 				end
 			end
 			
-			@dom = invokePhantomJS(SCRIPT, [picture, loadFrames, url, url_args])
+			@dom = invokePhantomJS(SCRIPT, [picture, loadFrames, url, url_args_.length, url_args])
 			
 			puts("Opened page: "+ /Open page: (.*?) END/.match(@dom)[1])
 			

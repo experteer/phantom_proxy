@@ -1,7 +1,41 @@
+require 'net/http'
+
 module PhantomJSProxy
 	class PhantomJSServer
 		def initialize()
 		end
+    
+    def check_for_route(url)
+      if /\.js/i.match(url)
+        return 'text/html';
+      end
+      if /\.css/i.match(url)
+        return 'text/css'
+      end
+      if /\.png/i.match(url) or /\.jpg/i.match(url) or /\.jpeg/i.match(url) or /\.gif/i.match(url)
+        return 'image/*';
+      end
+      "none"
+    end
+    
+    def route(env, type)
+      _req = Net::HTTP::Get.new(env['REQUEST_URI'])
+      
+      _req['User-Agent'] = env['HTTP_USER_AGENT']
+      
+      _res = Net::HTTP.start(env['HTTP_HOST'], env['SERVER_PORT']) {|http|
+        #http.request(_req)
+        http.get(env['REQUEST_URI'])
+      }
+      
+      env['rack.errors'].write("Response is:"+_res.body+"\n")
+      
+      resp = Rack::Response.new([], 200, 	{'Content-Type' => type}) { |r|
+        r.write(_res.body)
+      }
+      resp.finish
+    end
+    
 		def call(env)
 			req = Rack::Request.new(env)
 			
@@ -10,9 +44,15 @@ module PhantomJSProxy
 			
 			params = req.params.collect { |k, v| "#{k}=#{v}&\n" }.join
 			env['rack.errors'].write("Paramas: "+params+"\n")
+      
+      #this routes the request to the outgoing server incase its not html that we want to load
+      type = check_for_route(env['REQUEST_URI'])
+      if type != "none"
+          return route(env, type)
+      end
 			
 				
-			# Fetch the Webpage with PhantomJS
+			#Fetch the Webpage with PhantomJS
 			phJS = PhantomJS.new
 			
 			env['rack.errors'].write("Extract the uri\n")
@@ -28,8 +68,13 @@ module PhantomJSProxy
       else
         loadFrames = false
       end
+      
+      url = env['REQUEST_URI'];
+      if params.length > 0
+        url += '?'+params;
+      end
 			
-			phJS.getUrl(env['REQUEST_URI']+'?'+params, picture, loadFrames)
+			phJS.getUrl(url, picture, loadFrames)
 				
 			#Create the response
 			if !phJS.ready

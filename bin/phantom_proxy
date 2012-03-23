@@ -14,16 +14,24 @@ module PhantomJSProxy
 	CONFIG = File.expand_path(File.dirname(__FILE__))+"/../lib/phantom_proxy/config.ru"
 end
 
+require 'phantom_proxy'
+
 # Become a daemon
 options = {
-		:app_name		=> "phantomjs_proxy",
-    :backtrace  => true,
-    :ontop      => true,
-    :log_output => true
-  }
+  :app_name		=> "phantom_proxy",
+  :backtrace  => true,
+  :ontop      => true,
+  :log_output => true
+}
 #Daemons.daemonize(options)
+phantom = false
+ARGV.each { |arg|
+    phantom = true if /-self/.match(arg)
+}
 
-startoptions = ["start", "-R", PhantomJSProxy::CONFIG]+ARGV
-
-#ARGV
-Thin::Runner.new(startoptions).run!
+if !phantom
+  startoptions = ["start", "-R", PhantomJSProxy::CONFIG, "-P", "/tmp/pids/phantom_proxy.pid", "--tag", "phantom_proxy"]+ARGV
+  Thin::Runner.new(startoptions).run!
+else
+  Thin::Server.start(PhantomJSProxy::PhantomJSServer.new, ARGV[0], ARGV[1], ARGV[2])
+end
