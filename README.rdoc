@@ -18,12 +18,15 @@ On Debian:
 
  checkout phantom_proxy
  
- rake build
- rake install
+ gem build phantom_proxy.gemspec
+
+ gem install phantom_proxy-*.gem
          
 == Usage
 Run
  phantom_proxy 
+either with -self (ip, port) to not use the thin::runner framework
+or
 with any thin parameter you want (e.g. -p 8080).
 
 Point your browser's proxy to http://localhost:8080 for testting.
@@ -32,6 +35,3 @@ You can use the Net::HTTP lib to fetch page or use the phantom_client
 (see: https://github.com/experteer/phantom_client).
  
 == TODO
-- make a gem out of this
-- enable css/image loading again by default
-- keeping sessions (just an idea)
