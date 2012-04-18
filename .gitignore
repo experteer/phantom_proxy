@@ -3,5 +3,7 @@ phantom_proxy-*.gem
 
 #IDE
 .redcar
+.project
+
 doc
 !.keep
