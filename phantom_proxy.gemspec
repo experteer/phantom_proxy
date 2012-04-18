@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.files       = FileList['lib/**/*.rb',
   										'lib/**/*.js',
                       'lib/**/**/*.ru',
+                      'lib/**/**/*.html',
                       'bin/*',
                       '[A-Z]*',
                       'test/**/*'].to_a
