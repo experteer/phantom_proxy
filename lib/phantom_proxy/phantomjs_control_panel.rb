@@ -40,19 +40,19 @@ module PhantomJSProxy
     end
     
     def insert_value html
-      html["@start_time"] = start_time.ctime
-      html["@total_requests"] = total_requests.to_s
-      html["@html_requests"] = special_requests["@html_requests"].to_s
-      html["@image_requests"] = special_requests["@image_requests"].to_s
-      html["@forward_requests"] = special_requests["@forward_requests"].to_s
-      html["@control_requests"] = special_requests["@control_requests"].to_s
-      html["@failed_requests"] = special_requests["@failed_requests"].to_s
-      html["@favicon_requests"] = special_requests["@favicon_requests"].to_s
-      #special_requests.each { |key, value|
-      #  html[key] = value.to_s
-      #}
+      info_data = ""
+      info_data << create_entry("Running since", start_time.ctime)
+      info_data << create_entry("Total requests", total_requests.to_s)
+      special_requests.each { |key, value|
+        info_data << create_entry(key, special_requests[key].to_s)
+      }
+      html["@control_panel_data"] = info_data
       
       html
+    end
+    
+    def create_entry name, value
+      "<div class='name'>#{name}:</div><div class='value' id='#{name}'>#{value}</div><div class='divider'></div>"
     end
   end
 end

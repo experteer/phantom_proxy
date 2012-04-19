@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>phantom_proxy info</title>
+<title>Phantom Proxy Control</title>
 <style>
 h1 {
 	text-align: center;
@@ -37,23 +37,8 @@ h4 {
 <body>
 <h1>Phantom Proxy</h1>
 <h4>Control Panel</h4>
-<div class="infobox">
-	<div class="name">Running since:</div><div class="value">@start_time</div>
-	<div class="divider"></div>
-	<div class="name">Total requests:</div><div class="value">@total_requests</div>
-	<div class="divider"></div>
-	<div class="name">HTML requests:</div><div class="value">@html_requests</div>
-	<div class="divider"></div>
-	<div class="name">Image requests:</div><div class="value">@image_requests</div>
-	<div class="divider"></div>
-	<div class="name">Forward requests:</div><div class="value">@forward_requests</div>
-	<div class="divider"></div>
-	<div class="name">Control requests:</div><div class="value">@control_requests</div>
-	<div class="divider"></div>
-	<div class="name">Favicon requests:</div><div class="value">@favicon_requests</div>
-	<div class="divider"></div>
-	<div class="name">Failed requests:</div><div class="value">@failed_requests</div>
-	<div class="divider"></div>
+<div class="infobox" id="infobox">
+	@control_panel_data
 </div>
 </body>
 </html>
