@@ -43,6 +43,8 @@ module PhantomJSProxy
     end
     
 		def call(env)
+		  control_panel.add_request
+		  
 			req = Rack::Request.new(env)
 			
 			haha = env.collect { |k, v| "#{k} : #{v}\n" }.join
@@ -56,10 +58,9 @@ module PhantomJSProxy
       if type == "control_panel"
         return control_panel.show()
       elsif type != "none"
+        control_panel.add_special_request "@forward_requests"
         return route(env, type)
-      else
-        control_panel.add_request
-        
+      else        
         #Fetch the Webpage with PhantomJS
         phJS = PhantomJS.new
         
@@ -86,6 +87,12 @@ module PhantomJSProxy
           
         #Create the response
         if !phJS.ready
+          if !/favicon\.ico/.match(req.url())
+            env['rack.errors'].write("Request FAILED\n")
+            control_panel.add_special_request "@failed_requests"
+          else
+            control_panel.add_special_request "@favicon_requests"
+          end
           resp = Rack::Response.new([], 503,  {
                                                   'Content-Type' => 'text/html'
                                               }) { |r|
@@ -93,6 +100,7 @@ module PhantomJSProxy
           }
           resp.finish
         elsif picture
+          control_panel.add_special_request "@image_requests"
           resp = Rack::Response.new([], 200,  {
                                                   'Content-Type' => 'image/png'
                                               }) { |r|
@@ -100,6 +108,7 @@ module PhantomJSProxy
           }
           resp.finish
         else
+          control_panel.add_special_request "@html_requests"
           resp = Rack::Response.new([], 200,  {
                                                   'Content-Type' => 'text/html'
                                               }) { |r|
