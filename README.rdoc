@@ -33,5 +33,12 @@ Point your browser's proxy to http://localhost:8080 for testting.
 
 You can use the Net::HTTP lib to fetch page or use the phantom_client 
 (see: https://github.com/experteer/phantom_client).
+
+Monitoring(1.1.0):
+The phantom_proxy comes with a usage monitor.
+You can see the current proxy status by pointing your browser to
+	phantom_proxy_control_panel
+if you have set the proxy or just to the address and port the proxy is running at
+	address:port/phantom_proxy_control_panel
  
 == TODO
