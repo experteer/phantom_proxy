@@ -1,0 +1,5 @@
+gem uninstall phantom_proxy -x
+rm phantom_proxy-*.*.*.gem
+gem build phantom_proxy.gemspec
+gem install phantom_proxy-*.*.*.gem
+phantom_proxy

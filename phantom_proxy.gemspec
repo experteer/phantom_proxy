@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   										'lib/**/*.js',
                       'lib/**/**/*.ru',
                       'lib/**/**/*.html',
+                      'lib/**/**/*',
                       'bin/*',
                       '[A-Z]*',
                       'test/**/*'].to_a

@@ -50,7 +50,12 @@ module PhantomJSProxy
 			haha = env.collect { |k, v| "#{k} : #{v}\n" }.join
 			env['rack.errors'].write("The request: "+req.url()+"\nGET: "+haha+"\n")
 			
-			params = req.params.collect { |k, v| "#{k}=#{v}&\n" }.join
+			https_request = false
+			if /\:443/.match(req.url())
+			 https_request = true
+			end
+			
+			params = req.params.collect { |k, v| "#{k}=#{v}&" }.join
 			env['rack.errors'].write("Paramas: "+params+"\n")
       
       #this routes the request to the outgoing server incase its not html that we want to load
@@ -79,6 +84,11 @@ module PhantomJSProxy
         end
         
         url = env['REQUEST_URI'];
+        if https_request
+          url['http'] = 'https'
+          url[':443'] = ''
+        end
+        
         if params.length > 0
           url += '?'+params;
         end
