@@ -1,0 +1,102 @@
+#! /bin/bash
+### BEGIN INIT INFO
+# Provides:          phantom_proxy
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     3 4 5
+# Default-Stop:      0 1 2 6
+# Short-Description: This script starts the phantom proxy
+# Description:       With this script you can automaticly start phantom_proxy
+#										 instances. The script should be placed in /etc/init.d/phproxy
+### END INIT INFO
+
+PP_NAME=phantom_proxy
+
+PP_LOG=/tmp/$PP_NAME
+
+#create PP_LOG folder
+if [ ! -d $PP_LOG ]
+then
+mkdir -p $PP_LOG
+fi
+
+PP_LOG_FILE=$PP_LOG/$PP_NAME.log
+
+PP_PID=$PP_LOG/$PP_NAME.pid
+
+PP_PORT=3003
+
+PP_HOST=localhost
+
+PP_OPTIONS="-p $PP_PORT -a $PP_HOST -P $PP_PID -l $PP_LOG_FILE -d"
+
+do_start()
+{
+	if [ -e $PP_PID ]
+	then
+		echo "Service phantom_proxy already running abort"
+		return
+	fi
+	echo "Starting phantom_proxy service"
+	$PP_NAME $PP_OPTIONS
+}
+
+do_stop()
+{
+	if [ -e $PP_PID ]
+	then
+		echo "Stopping phantom_proxy service"
+		pp_id=$(cat $PP_PID)
+		kill $pp_id
+		return
+	fi
+	
+	echo "Error phantom_proxy service isn't running"
+}
+
+do_restart()
+{
+	do_stop
+	sleep 5
+	do_start
+}
+
+do_status()
+{
+	echo "Checking status"
+	if [ -e $PP_PID ]
+	then
+		pp_id=$(cat $PP_PID)
+		if [ `ps -p $pp_id | grep -c $PP_NAME` -ne 1 ] ; then
+	  	echo "failed - no process"
+	  	return 2
+		else
+			echo "Found PID: $pp_id"
+			return 0
+		fi
+		return
+	fi
+	echo "phantom_proxy is not running"
+}
+
+case "$1" in
+  start)
+        do_start
+        ;;  
+  stop)
+        do_stop
+        ;;    
+  restart)
+        do_restart
+        ;;      
+  status)
+        do_status
+        ;;  
+  *)
+  			#echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
+        echo "Usage: $PP_NAME {start|stop|status|restart}" >&2 
+        exit 3
+        ;;
+esac
+
+:
