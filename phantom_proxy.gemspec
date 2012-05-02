@@ -19,4 +19,5 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://experteer.com'
   s.executables = ['phantom_proxy']
   s.add_dependency('thin', '>= 1.3.1')
+  s.add_dependency('ruby-hmac', '>= 0.4.0')
 end

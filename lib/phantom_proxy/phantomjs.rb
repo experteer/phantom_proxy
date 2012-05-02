@@ -24,10 +24,10 @@ module PhantomJSProxy
       end
 			
 			if pictureOnly
-				if !File.directory?("/tmp/phantomjs_proxy")
-					Dir.mkdir("/tmp/phantomjs_proxy")
+				if !File.directory?("/tmp/phantom_proxy")
+					Dir.mkdir("/tmp/phantom_proxy")
 				end
-				pictureFile = Tempfile.new(["phantomjs_proxy/page", ".png"])
+				pictureFile = Tempfile.new(["phantom_proxy/page", ".png"])
 				picture = pictureFile.path
 			end
 			
@@ -75,7 +75,7 @@ module PhantomJSProxy
 		def invokePhantomJS(script, args)
 			argString = " "+args.join(" ")
 			puts("Call phantomJS with: "+argString)
-			out = IO.popen(PHANTOMJS_BIN+" --cookies-file=/tmp/phantomjs_proxy/cookies.txt "+script+argString)
+			out = IO.popen(PHANTOMJS_BIN+" --cookies-file=/tmp/phantom_proxy/cookies.txt "+script+argString)
 			o = out.readlines.join
       puts("PHANTOMJS_OUT: "+o)
 			return o

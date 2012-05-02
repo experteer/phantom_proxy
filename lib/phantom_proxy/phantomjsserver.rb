@@ -1,8 +1,9 @@
 require 'net/http'
+require 'hmac-md5'
 
 module PhantomJSProxy
 	class PhantomJSServer
-		def initialize()
+		def initialize
 		  @control_panel = PhantomJSProxy::PhantomJSControlPanel.new
 		end
 		
