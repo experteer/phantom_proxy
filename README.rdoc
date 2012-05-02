@@ -40,5 +40,9 @@ You can see the current proxy status by pointing your browser to
 	phantom_proxy_control_panel
 if you have set the proxy or just to the address and port the proxy is running at
 	address:port/phantom_proxy_control_panel
+
+Security(1.2.0)
+Now the phantom_proxy can be secured with a key. The system is implemented with an hmac algorithm.
+Simply supply "-hmac THE_KEY" when starting the proxy and the proxy is secured
  
 == TODO
