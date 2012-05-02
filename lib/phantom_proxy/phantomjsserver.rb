@@ -5,9 +5,23 @@ module PhantomJSProxy
 	class PhantomJSServer
 		def initialize
 		  @control_panel = PhantomJSProxy::PhantomJSControlPanel.new
+		  
+		  #load key
+		  @hmac_activated = false
+      @hmac = nil
+		  if File.directory?("/tmp/phantom_proxy")
+        if File.exists?("/tmp/phantom_proxy/key")
+          key = File.open("/tmp/phantom_proxy/key", "r").read
+          #puts "HMAC_KEY: #{key}"
+          @hmac_activated = true
+          @hmac = HMAC::MD5.new key
+        end
+      end
 		end
 		
 		attr_accessor :control_panel
+		attr_accessor :hmac
+		attr_accessor :hmac_activated
     
     def check_for_route(url)
       if /\.js/i.match(url)
@@ -43,6 +57,19 @@ module PhantomJSProxy
       resp.finish
     end
     
+    def check_request_security req, env
+      client_key = env['HTTP_HMAC_KEY']
+      client_time= Time.parse(env['HTTP_HMAC_TIME'])
+      remote_time= Time.now
+      remote_key = hmac.update(env['REQUEST_URI']+env['HTTP_HMAC_TIME']).hexdigest
+
+      if (client_key != remote_key || (remote_time-client_time).abs > 120)
+        control_panel.add_special_request "@did not pass security check"
+        return false
+      end
+      return true
+    end
+    
 		def call(env)
 		  control_panel.add_request
 		  
@@ -50,6 +77,15 @@ module PhantomJSProxy
 			
 			haha = env.collect { |k, v| "#{k} : #{v}\n" }.join
 			env['rack.errors'].write("The request: "+req.url()+"\nGET: "+haha+"\n")
+			
+			if hmac_activated && !check_request_security(req, env)
+        resp = Rack::Response.new([], 503,  {
+                                                'Content-Type' => 'text/html'
+                                            }) { |r|
+          r.write("Security ERROR")
+        }
+        return resp.finish
+      end
 			
 			https_request = false
 			if /\:443/.match(req.url())
