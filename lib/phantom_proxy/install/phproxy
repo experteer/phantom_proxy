@@ -21,13 +21,24 @@
 #	Options you can set are:
 #	PP_PID_NAME: The name of the process
 #	PP_PORT: The port to run the proxy on (3003)
-#	PP_HOST: THe host to run the proxy on (127.0.0.1)
+#	PP_HOST: The host to run the proxy on (127.0.0.1)
+#	PP_HMAC: The hmac key to secure the server
+#
+#	Example config file could look like the following:
+#
+#		PP_PID_NAME="phantom_proxy_instance"
+#		PP_PORT=3002
+#		PP_HMAC="abcdefghi"
+#
+#	End Example
 #
 ### End README
 
 PP_NAME=phantom_proxy
 
 PP_PID_NAME="phantom_proxy"
+
+PP_HMAC="none"
 
 PP_LOG()
 {
@@ -63,11 +74,17 @@ PP_HOST=localhost
 
 PP_OPTIONS()
 {
-	echo "-p $PP_PORT -a $PP_HOST -P $(PP_PID) -l $(PP_LOG_FILE) -d"
+	if [ $PP_HMAC == "none" ]
+	then
+		echo "-p $PP_PORT -a $PP_HOST -P $(PP_PID) -l $(PP_LOG_FILE) -d"
+	else
+		echo "-p $PP_PORT -a $PP_HOST -P $(PP_PID) -l $(PP_LOG_FILE) -d -hmac $PP_HMAC"
+	fi
 }
 
 load_config_file()
 {
+	PP_HMAC="none"
 	if [ -e $1 ]
 	then
 		echo "Loaded Configfile: $1"
@@ -85,6 +102,7 @@ run_for_configs()
 			load_config_file "$cfg_folder/$i"
 			#run the given method
 			$1
+			sleep 2
 		done
 		return
 	elif [ -e $cfg_folder ]; then

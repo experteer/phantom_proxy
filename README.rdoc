@@ -44,5 +44,9 @@ if you have set the proxy or just to the address and port the proxy is running a
 Security(1.2.0)
 Now the phantom_proxy can be secured with a key. The system is implemented with an hmac algorithm.
 Simply supply "-hmac THE_KEY" when starting the proxy and the proxy is secured
+
+Service script(1.2.1)
+In lib/phantom_proxy/install you can find an init.d script which makes it pretty easy to use phantom_proxy as a service with variable configured instances.
+A howto on the config of the services can be found in the init script.
  
 == TODO

@@ -58,6 +58,10 @@ module PhantomJSProxy
     end
     
     def check_request_security req, env
+      if !env['HTTP_HMAC_KEY'] || !env['HTTP_HMAC_TIME']
+        return false
+      end
+      
       client_key = env['HTTP_HMAC_KEY']
       client_time= Time.parse(env['HTTP_HMAC_TIME'])
       remote_time= Time.now
@@ -75,10 +79,10 @@ module PhantomJSProxy
 		  
 			req = Rack::Request.new(env)
 			
-			haha = env.collect { |k, v| "#{k} : #{v}\n" }.join
-			env['rack.errors'].write("The request: "+req.url()+"\nGET: "+haha+"\n")
+			request_parameters = env.collect { |k, v| "\t#{k} : #{v}\n" }.join
+			env['rack.errors'].write("The request: "+req.url()+"\nGET: "+request_parameters+"\n")
 			
-			if hmac_activated && !check_request_security(req, env)
+			if hmac_activated && hmac && !check_request_security(req, env)
         resp = Rack::Response.new([], 503,  {
                                                 'Content-Type' => 'text/html'
                                             }) { |r|
