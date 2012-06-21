@@ -40,6 +40,9 @@ PP_PID_NAME="phantom_proxy"
 
 PP_HMAC="none"
 
+PP_USER_STANDARD=experteer
+PP_USER=experteer
+
 PP_LOG()
 {
 	local log_dir="/tmp/$PP_NAME"
@@ -65,7 +68,7 @@ PP_LOG_FILE()
 
 PP_PID()
 {
-	echo "$(PP_LOG)/$PP_PID_NAME.pid"
+	echo "/tmp/pids/$PP_PID_NAME.pid"
 }
 
 PP_PORT=3003
@@ -94,6 +97,8 @@ load_config_file()
 
 run_for_configs()
 {
+	PP_USER=$PP_USER_STANDARD
+	
 	cfg_folder=$(PP_CONFIG)
 	echo "Check config $cfg_folder"
 	if [ -d $cfg_folder ]; then
@@ -124,7 +129,7 @@ do_start()
 		return
 	fi
 	echo "Starting $PP_NAME service"
-	$PP_NAME $(PP_OPTIONS)
+	sudo su -c "$PP_NAME $(PP_OPTIONS)" $PP_USER
 }
 
 do_stop()
