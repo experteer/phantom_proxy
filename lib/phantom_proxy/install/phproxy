@@ -55,7 +55,7 @@ PP_LOG()
 
 PP_CONFIG()
 {
-	echo "/etc/.$PP_NAME/config"
+	echo "/etc/$PP_NAME/config"
 }
 
 PP_LOG_FILE()
