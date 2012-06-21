@@ -75,10 +75,12 @@ module PhantomJSProxy
 		def invokePhantomJS(script, args)
 			argString = " "+args.join(" ")
 			puts("Call phantomJS with: "+argString)
-			out = IO.popen(PHANTOMJS_BIN+" --cookies-file=/tmp/phantom_proxy/cookies.txt "+script+argString)
-			o = out.readlines.join
-      puts("PHANTOMJS_OUT: "+o)
-			return o
+			out = ""
+			IO.popen(PHANTOMJS_BIN+" --cookies-file=/tmp/phantom_proxy/cookies.txt "+script+argString) {|io|
+			  out = io.readlines.join
+			}
+      puts("PHANTOMJS_OUT: "+out)
+			return out
 		end
 	end
 end
