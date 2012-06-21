@@ -5,6 +5,7 @@ module PhantomJSProxy
 	SCRIPT = ROOT+"/phantom_proxy/scripts/proxy.js"
 	CONTROL_PANEL = ROOT+"/phantom_proxy/web/control_panel.html"
 	PHANTOMJS_BIN = 'phantomjs'#ROOT+'/phantom_proxy/vendor/bin/phantomjs'
+	PHANTOMJS_SERVICE_SCRIPT = ROOT+"/phantom_proxy/install/phproxy"
 end
 
 require PhantomJSProxy::ROOT+'/phantom_proxy/phantomjs.rb'

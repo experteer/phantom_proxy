@@ -13,9 +13,9 @@
 ### README
 #
 #	You can put a configfile at
-#	HOMEFOLDER/.phantom_proxy/config
+#	/etc/phantom_proxy/config
 #	or
-#	put several files into a folder at HOMEFOLDER/.phantom_proxy/config
+#	put several files into a folder at /etc/phantom_proxy/config
 #	all files are loaded and one instance is created per file(CAUTION!! you have to set a unique PP_PID_NAME for each instance)
 #	
 #	Options you can set are:
@@ -55,7 +55,7 @@ PP_LOG()
 
 PP_CONFIG()
 {
-	echo "/home/dsudmann/.$PP_NAME/config"
+	echo "/etc/.$PP_NAME/config"
 }
 
 PP_LOG_FILE()
