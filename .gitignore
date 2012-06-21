@@ -1,5 +1,6 @@
 phantom_proxy-*.gem
 .rvmrc
+log/
 
 #IDE
 .redcar
