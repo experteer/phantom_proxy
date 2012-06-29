@@ -24,7 +24,7 @@ module PhantomJSProxy
 		attr_accessor :hmac_activated
     
     def check_for_route(url)
-      if /\.js/i.match(url)
+      if /\.js/i.match(url) and !/\.jsp/i.match(url)
         return 'text/html';
       end
       if /\.css/i.match(url)
