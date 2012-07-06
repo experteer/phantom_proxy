@@ -49,7 +49,7 @@ module PhantomJSProxy
         http.get(env['REQUEST_URI'])
       }
       
-      env['rack.errors'].write("Response is:"+_res.body+"\n")
+      #env['rack.errors'].write("Response is:"+_res.body+"\n")
       
       resp = Rack::Response.new([], 200, 	{'Content-Type' => type}) { |r|
         r.write(_res.body)

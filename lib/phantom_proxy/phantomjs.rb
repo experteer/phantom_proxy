@@ -64,7 +64,7 @@ module PhantomJSProxy
 				@dom = "Failed to load page"
 				puts("TOTAL FAIL")
 			end
-			puts("Return dom")
+			#puts("Return dom")
 			return @dom
 		end
 		
@@ -79,7 +79,7 @@ module PhantomJSProxy
 			IO.popen(PHANTOMJS_BIN+" --cookies-file=/tmp/phantom_proxy/cookies.txt "+script+argString) {|io|
 			  out = io.readlines.join
 			}
-      puts("PHANTOMJS_OUT: "+out)
+      #puts("PHANTOMJS_OUT: "+out)
 			return out
 		end
 	end
