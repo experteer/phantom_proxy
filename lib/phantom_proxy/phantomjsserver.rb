@@ -137,14 +137,14 @@ module PhantomJSProxy
         phJS.getUrl(url, picture, loadFrames)
           
         #Create the response
-        if !phJS.ready
+        if phJS.ready != 200
           if !/favicon\.ico/.match(req.url())
             env['rack.errors'].write("Request FAILED\n")
             control_panel.add_special_request "@failed_requests"
           else
             control_panel.add_special_request "@favicon_requests"
           end
-          resp = Rack::Response.new([], 503,  {
+          resp = Rack::Response.new([], phJS.ready ,  {
                                                   'Content-Type' => 'text/html'
                                               }) { |r|
             r.write(phJS.dom)

@@ -48,9 +48,11 @@ module PhantomJSProxy
 			
 			puts("Opened page: "+ /Open page: (.*?) END/.match(@dom)[1])
 			
+			@ready = 503
+			dom_text = "Failed to load page"
+			
 			if /DONE_LOADING_URL/.match(@dom)
-				@dom = @dom.split('PHANTOMJS_DOMDATA_WRITE:')[1];
-				@dom = @dom.split('PHANTOMJS_DOMDATA_END')[0]
+				dom_text = getDOMText @dom
 				if pictureOnly && File.exist?(picture) 
 					puts("File is there")
 					@image = IO::File.open(picture, "rb") {|f| f.read }
@@ -59,13 +61,25 @@ module PhantomJSProxy
 					puts("No file to load at: "+picture)
 					@image = ""
 				end
-				@ready = true
-			else
-				@dom = "Failed to load page"
-				puts("TOTAL FAIL")
+				@ready = 200
 			end
-			#puts("Return dom")
+			if /FAILED_LOADING_URL/.match(@dom)
+			  @ready = getHTTPCode @dom
+        puts("LOAD_ERROR")
+			end
+			@dom = dom_text
 			return @dom
+		end
+		
+		def getDOMText data
+		  tmp = data.split('PHANTOMJS_DOMDATA_WRITE:')[1];
+		  tmp = tmp.split('PHANTOMJS_DOMDATA_END')[0]
+		  tmp
+		end
+		
+		def getHTTPCode data
+		  tmp = /FAILED_LOADING_URL: (.*?)FAILED_LOADING_URL_END/.match(data)[1]
+		  tmp.to_i
 		end
 		
 		def getAsImageResponse(type='png')
