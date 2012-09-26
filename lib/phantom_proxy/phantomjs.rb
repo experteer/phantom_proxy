@@ -52,7 +52,9 @@ module PhantomJSProxy
 			dom_text = "Failed to load page"
 			
 			if /DONE_LOADING_URL/.match(@dom)
+        puts("LOAD_DOM_TEXT")
 				dom_text = getDOMText @dom
+        puts("LOAD_DOM_TEXT_DONE")
 				if pictureOnly && File.exist?(picture) 
 					puts("File is there")
 					@image = IO::File.open(picture, "rb") {|f| f.read }
@@ -64,8 +66,9 @@ module PhantomJSProxy
 				@ready = 200
 			end
 			if /FAILED_LOADING_URL/.match(@dom)
+        puts("LOAD_ERROR_CODE")
 			  @ready = getHTTPCode @dom
-        puts("LOAD_ERROR")
+        puts("LOAD_ERROR_CODE_DONE")
 			end
 			@dom = dom_text
 			return @dom
@@ -78,7 +81,9 @@ module PhantomJSProxy
 		end
 		
 		def getHTTPCode data
-		  tmp = /FAILED_LOADING_URL: (.*?)FAILED_LOADING_URL_END/.match(data)[1]
+		  tmp = data.split('FAILED_LOADING_URL:')[1];
+      tmp = tmp.split('FAILED_LOADING_URL_END')[0]
+		  #tmp = /FAILED_LOADING_URL: (.*?)FAILED_LOADING_URL_END/.match(data)[1]
 		  tmp.to_i
 		end
 		
