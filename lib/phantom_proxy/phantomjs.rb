@@ -4,15 +4,15 @@ module PhantomJSProxy
 	class PhantomJS
 		attr_accessor :dom
 		attr_accessor :image
-		attr_accessor :ready
+    attr_accessor :ready
 	
 		def initialize()
-			@ready = false
+			@ready = 503
 		end
 		
 		def getUrl(url, pictureOnly=true, loadIFrames=true)
 			puts("PhantomJS: "+url)
-			@ready = false
+			@ready = 503
 			
 			pictureFile = nil
 			picture = "none"
@@ -65,7 +65,7 @@ module PhantomJSProxy
 				end
 				@ready = 200
 			end
-			if /FAILED_LOADING_URL/.match(@dom)
+			if /URL_ERROR_CODE/.match(@dom)
         puts("LOAD_ERROR_CODE")
 			  @ready = getHTTPCode @dom
         puts("LOAD_ERROR_CODE_DONE")
@@ -81,8 +81,8 @@ module PhantomJSProxy
 		end
 		
 		def getHTTPCode data
-		  tmp = data.split('FAILED_LOADING_URL:')[1];
-      tmp = tmp.split('FAILED_LOADING_URL_END')[0]
+		  tmp = data.split('URL_ERROR_CODE: ')[1];
+      tmp = tmp.split('URL_ERROR_CODE_END')[0]
 		  #tmp = /FAILED_LOADING_URL: (.*?)FAILED_LOADING_URL_END/.match(data)[1]
 		  tmp.to_i
 		end
@@ -95,7 +95,7 @@ module PhantomJSProxy
 			argString = " "+args.join(" ")
 			puts("Call phantomJS with: "+argString)
 			out = ""
-			IO.popen(PHANTOMJS_BIN+" --cookies-file=/tmp/phantom_proxy/cookies.txt "+script+argString) {|io|
+			IO.popen(PHANTOMJS_BIN+" --cookies-file=/tmp/phantom_proxy/cookies.txt --ignore-ssl-errors=yes "+script+argString) {|io|
 			  out = io.readlines.join
 			}
       #puts("PHANTOMJS_OUT: "+out)
