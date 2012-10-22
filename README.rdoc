@@ -48,5 +48,14 @@ Simply supply "-hmac THE_KEY" when starting the proxy and the proxy is secured
 Service script(1.2.1)
 In lib/phantom_proxy/install you can find an init.d script which makes it pretty easy to use phantom_proxy as a service with variable configured instances.
 A howto on the config of the services can be found in the init script.
- 
+
+Service script(1.2.10)
+Added an example script fixed alot of bugs from previous versions
+To succesfully run the service you have to create the following directories and files
+mkdir /etc/phantom_proxy
+mkdir /etc/phantom_proxy/config or place a config file there
+If you created config as a directory place your config files in there. In the install dir you find an example script for this.
+
+Inside phproxy you have to set PP_USER_STANDARD and PP_USER to the user you want to run the as or set this variable inside the proxy script.
+
 == TODO

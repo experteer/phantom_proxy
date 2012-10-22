@@ -3,7 +3,7 @@ require 'rake'
 
 Gem::Specification.new do |s|
   s.name        = 'phantom_proxy'
-  s.version     = '1.2.9'
+  s.version     = '1.2.10'
   s.summary     = "This is a phantomjs Proxy"
   s.description = "This is a phyntonjs Proxy it allows you to fetch webpages and execute javascript in them."
   s.authors     = ["Daniel Sudmann"]
@@ -14,6 +14,8 @@ Gem::Specification.new do |s|
                       'lib/**/**/*.html',
                       'lib/**/**/*',
                       'lib/**/**/**/*',
+                      'lib/phantom_proxy/install/**/*',
+                      'lib/phantom_proxy/install/**/**/*',
                       'bin/*',
                       '[A-Z]*',
                       'test/**/*'].to_a
