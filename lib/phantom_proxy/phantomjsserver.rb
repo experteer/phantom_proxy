@@ -1,5 +1,6 @@
 require 'net/http'
 require 'hmac-md5'
+require 'base64'
 
 module PhantomJSProxy
 	class PhantomJSServer
@@ -25,16 +26,19 @@ module PhantomJSProxy
     
     def check_for_route(url)
       if /\.js/i.match(url) and !/\.jsp/i.match(url)
-        return 'text/html';
+        return 'text/html'
       end
       if /\.css/i.match(url)
         return 'text/css'
       end
       if /\.png/i.match(url) or /\.jpg/i.match(url) or /\.jpeg/i.match(url) or /\.gif/i.match(url)
-        return 'image/*';
+        return 'image/*'
       end
       if /phantom_proxy_control_panel/.match(url)
         return 'control_panel'
+      end
+      if /phantomProxy\.get/.match(url)
+      	return "base64"
       end
       "none"
     end
@@ -73,7 +77,41 @@ module PhantomJSProxy
       end
       return true
     end
-    
+
+    def getOptions(env)
+    	if defined? env['HTTP_GET_PAGE_AS_IMAGE']
+    		picture = env['HTTP_GET_PAGE_AS_IMAGE']
+      else
+      	picture = true
+      end
+      
+      if defined? env['HTTP_GET_PAGE_WITH_IFRAMES']
+      	loadFrames = env['HTTP_GET_PAGE_WITH_IFRAMES']
+      else
+        loadFrames = false
+      end
+      
+      return picture,loadFrames
+    end
+
+		def prepareUrl(env, params, req, https_request, type)
+			if type == "none"
+				url = env['REQUEST_URI'];
+        if https_request
+          url['http'] = 'https'
+          url[':443'] = ''
+        end
+        
+        if params.length > 0
+          url += '?'+params;
+        end
+        return url
+			end
+			url = Base64.decode64(req.params["address"])
+			env['rack.errors'].write("After Base64 decoding: "+url)
+			return url
+		end
+
 		def call(env)
 		  control_panel.add_request
 		  
@@ -103,7 +141,7 @@ module PhantomJSProxy
       type = check_for_route(env['REQUEST_URI'])
       if type == "control_panel"
         return control_panel.show()
-      elsif type != "none"
+      elsif type != "none" and type != "base64"
         control_panel.add_special_request "@forward_requests"
         return route(env, type)
       else        
@@ -112,27 +150,9 @@ module PhantomJSProxy
         
         env['rack.errors'].write("Extract the uri\n")
         
-        if defined? env['HTTP_GET_PAGE_AS_IMAGE']
-          picture = env['HTTP_GET_PAGE_AS_IMAGE']
-        else
-          picture = true
-        end
+        picture,loadFrames = getOptions(env)
         
-        if defined? env['HTTP_GET_PAGE_WITH_IFRAMES']
-          loadFrames = env['HTTP_GET_PAGE_WITH_IFRAMES']
-        else
-          loadFrames = false
-        end
-        
-        url = env['REQUEST_URI'];
-        if https_request
-          url['http'] = 'https'
-          url[':443'] = ''
-        end
-        
-        if params.length > 0
-          url += '?'+params;
-        end
+        url = prepareUrl(env, params, req, https_request, type)
         
         phJS.getUrl(url, picture, loadFrames)
           
