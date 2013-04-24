@@ -44,7 +44,7 @@ module PhantomJSProxy
 				end
 			end
 			
-			@dom = invokePhantomJS(SCRIPT, [picture, loadFrames, url, url_args_.length, url_args])
+			@dom = invokePhantomJS(SCRIPT, [picture, loadFrames, "\""+url+"\"", url_args_.length, url_args])
 			
 			puts("Opened page: "+ /Open page: (.*?) END/.match(@dom)[1])
 			
@@ -95,6 +95,7 @@ module PhantomJSProxy
 			argString = " "+args.join(" ")
 			puts("Call phantomJS with: "+argString)
 			out = ""
+
 			IO.popen(PHANTOMJS_BIN+" --cookies-file=/tmp/phantom_proxy/cookies.txt --ignore-ssl-errors=yes "+script+argString) {|io|
 			  out = io.readlines.join
 			}
