@@ -3,7 +3,7 @@ require 'rake'
 
 Gem::Specification.new do |s|
   s.name        = 'phantom_proxy'
-  s.version     = '1.2.13'
+  s.version     = '1.2.14'
   s.summary     = "This is a phantomjs Proxy"
   s.description = "This is a phyntonjs Proxy it allows you to fetch webpages and execute javascript in them."
   s.authors     = ["Daniel Sudmann"]
