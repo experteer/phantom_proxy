@@ -5,6 +5,8 @@ log/
 #IDE
 .redcar
 .project
+.rbenv-gemsets
 
 doc
 !.keep
+Gemfile.lock

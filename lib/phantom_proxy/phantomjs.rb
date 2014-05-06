@@ -68,7 +68,7 @@ module PhantomJSProxy
 			if /URL_ERROR_CODE/.match(@dom)
         puts("LOAD_ERROR_CODE")
 			  @ready = getHTTPCode @dom
-        puts("LOAD_ERROR_CODE_DONE")
+        puts("LOAD_ERROR_CODE_DONE: #{@ready}")
 			end
 			@dom = dom_text
 			return @dom

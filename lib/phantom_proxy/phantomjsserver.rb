@@ -3,6 +3,20 @@ require 'hmac-md5'
 require 'base64'
 
 module PhantomJSProxy
+  class Options
+    def initialize(env)
+      @env = env
+    end
+
+    def picture?
+      @env['HTTP_GET_PAGE_AS_IMAGE']||false
+    end
+
+    def loadFrames?
+      @env['HTTP_GET_PAGE_WITH_IFRAMES']||true
+    end
+  end
+
 	class PhantomJSServer
 		def initialize
 		  @control_panel = PhantomJSProxy::PhantomJSControlPanel.new
@@ -78,28 +92,13 @@ module PhantomJSProxy
       return true
     end
 
-    def getOptions(env)
-    	if defined? env['HTTP_GET_PAGE_AS_IMAGE']
-    		picture = env['HTTP_GET_PAGE_AS_IMAGE']
-      else
-      	picture = true
-      end
-      
-      if defined? env['HTTP_GET_PAGE_WITH_IFRAMES']
-      	loadFrames = env['HTTP_GET_PAGE_WITH_IFRAMES']
-      else
-        loadFrames = false
-      end
-      
-      return picture,loadFrames
-    end
-
 		def prepareUrl(env, params, req, https_request, type)
 			if type == "none"
-				url = env['REQUEST_URI'];
+				url = req.url#env['REQUEST_URI']
+        puts "URL is: #{url}"
         if https_request
-          url['http'] = 'https'
-          url[':443'] = ''
+          url['http'] = 'https' if url['http']
+          url[':443'] = '' if url[':443']
         end
         
         if params.length > 0
@@ -108,7 +107,7 @@ module PhantomJSProxy
         return url
 			end
 			url = Base64.decode64(req.params["address"])
-			env['rack.errors'].write("After Base64 decoding: "+url)
+			env['rack.errors'].write("After Base64 decoding: "+url+"\n")
 			return url
 		end
 
@@ -138,7 +137,7 @@ module PhantomJSProxy
 			env['rack.errors'].write("Paramas: "+params+"\n")
       
       #this routes the request to the outgoing server incase its not html that we want to load
-      type = check_for_route(env['REQUEST_URI'])
+      type = check_for_route(req.url)#env['REQUEST_URI'])
       if type == "control_panel"
         return control_panel.show()
       elsif type != "none" and type != "base64"
@@ -149,15 +148,25 @@ module PhantomJSProxy
         phJS = PhantomJS.new
         
         env['rack.errors'].write("Extract the uri\n")
-        
-        picture,loadFrames = getOptions(env)
+
+        loadOptions = Options.new(env)
+
+        puts "Options: #{loadOptions.picture?}, #{loadOptions.loadFrames?}"
         
         url = prepareUrl(env, params, req, https_request, type)
         
-        phJS.getUrl(url, picture, loadFrames)
+        phJS.getUrl(url, loadOptions.picture?, loadOptions.loadFrames?)
 
         #Create the response
-        if phJS.ready != 200
+        if loadOptions.picture?
+          control_panel.add_special_request "@image_requests"
+          resp = Rack::Response.new([], 200,  {
+                                                  'Content-Type' => 'image/png'
+                                              }) { |r|
+            r.write(phJS.image)
+          }
+          resp.finish
+        elsif phJS.ready != 200
           if !/favicon\.ico/.match(req.url())
             env['rack.errors'].write("Request FAILED\n")
             control_panel.add_special_request "@failed_requests"
@@ -168,14 +177,6 @@ module PhantomJSProxy
                                                   'Content-Type' => 'text/html'
                                               }) { |r|
             r.write(phJS.dom)
-          }
-          resp.finish
-        elsif picture
-          control_panel.add_special_request "@image_requests"
-          resp = Rack::Response.new([], 200,  {
-                                                  'Content-Type' => 'image/png'
-                                              }) { |r|
-            r.write(phJS.image)
           }
           resp.finish
         else
