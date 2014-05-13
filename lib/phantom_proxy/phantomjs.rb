@@ -96,7 +96,7 @@ module PhantomJSProxy
 			puts("Call phantomJS with: "+argString)
 			out = ""
 
-			IO.popen(PHANTOMJS_BIN+" --ignore-ssl-errors=yes "+script+argString) {|io|
+			IO.popen(PHANTOMJS_BIN+" --ignore-ssl-errors=yes --web-security=false "+script+argString) {|io|
 			  out = io.readlines.join
 			}
       #puts("PHANTOMJS_OUT: "+out)
