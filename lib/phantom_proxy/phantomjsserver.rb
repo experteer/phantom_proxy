@@ -94,7 +94,7 @@ module PhantomJSProxy
 
 		def prepareUrl(env, params, req, https_request, type)
 			if type == "none"
-				url = req.url#env['REQUEST_URI']
+				url = env['REQUEST_URI']#req.url
         puts "URL is: #{url}"
         if https_request
           url['http'] = 'https' if url['http']
@@ -137,7 +137,7 @@ module PhantomJSProxy
 			env['rack.errors'].write("Paramas: "+params+"\n")
       
       #this routes the request to the outgoing server incase its not html that we want to load
-      type = check_for_route(req.url)#env['REQUEST_URI'])
+      type = check_for_route(env['REQUEST_URI'])#req.url
       if type == "control_panel"
         return control_panel.show()
       elsif type != "none" and type != "base64"
