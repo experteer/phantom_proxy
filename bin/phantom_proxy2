@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+
+require "goliath/runner"
+require "phantom_proxy2"
+require 'optparse'
+
+module PhantomProxy2
+  def self.load_config
+    options = {}
+    optparse = OptionParser.new do|opts|
+      opts.banner = "Usage: "
+      opts.on( '-l [FILE]', '--logfile [FILE]', 'Write log to FILE' ) do |file|
+        # PhantomProxy2.logger = Logger.new(file)
+        options[:log_file] = file
+      end
+      opts.on('--hmac [STRING]', 'Use a hmac key to secure the connection' ) do |hmac|
+        # PhantomProxy2.hmac_key = hmac
+        options[:hmac_key] = hmac
+      end
+    end
+    args = ARGV.dup
+    remaining = []
+    while !args.empty?
+      begin
+        head = args.shift
+        remaining.concat(optparse.parse([head, args].flatten))
+      rescue OptionParser::InvalidOption
+        remaining << head
+        retry
+      end
+    end
+    PhantomProxy2.logger    = Logger.new(options[:log_file]) if options[:log_file]
+    PhantomProxy2.hmac_key  = options[:hmac_key] if options[:hmac_key]
+    remaining
+  end
+  def self.run_phantom_proxy2(args)
+    puts "Run with #{args}"
+    runner = Goliath::Runner.new(args, nil)
+    runner.logger=PhantomProxy2.logger
+    runner.port = PhantomProxy2.port if PhantomProxy2.respond_to?(:port)
+    runner.address = PhantomProxy2.address if PhantomProxy2.respond_to?(:address)
+
+    Goliath.env = PhantomProxy2.env if PhantomProxy2.respond_to?(:env)
+
+    runner.api = PhantomProxy2::Service.new
+    runner.app = Goliath::Rack::Builder.build(PhantomProxy2::Service, runner.api)
+
+    puts "Now starting PhantomProxy2 #{PhantomProxy2::VERSION}...."
+    runner.run
+  end
+end
+
+PhantomProxy2.run_phantom_proxy2 PhantomProxy2.load_config
