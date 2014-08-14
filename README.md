@@ -1,31 +1,61 @@
-# PhantomProxy2
+== Phantom Proxy - A webkit proxy
+The phantom proxy acts as a http proxy server. It fetches the remote webpages
+with the help phantomjs (see http://www.phantomjs.org/ ).
 
-TODO: Write a gem description
+You can use this to get a page after the javascipt execution. By setting some HTTP
+headers you can get the page with all iframes included or as an image. 
 
-## Installation
+== Installation
+Install phanotmjs (see: http://code.google.com/p/phantomjs/wiki/BuildInstructions)
 
-Add this line to your application's Gemfile:
+On Debian:
 
-```ruby
-gem 'phantom_proxy2'
-```
+ sudo apt-get install libqt4-dev libqtwebkit-dev qt4-qmake
+ cd phantom
+ git clone https://github.com/ariya/phantomjs.git
+ git checkout 1.2
+ qmake-qt4 && make
 
-And then execute:
+ checkout phantom_proxy
+ 
+ gem build phantom_proxy.gemspec
 
-    $ bundle
+ gem install phantom_proxy-*.gem
+         
+== Usage
+Run
+ phantom_proxy 
+either with -self (ip, port) to not use the thin::runner framework
+or
+with any thin parameter you want (e.g. -p 8080).
 
-Or install it yourself as:
+Point your browser's proxy to http://localhost:8080 for testting.
 
-    $ gem install phantom_proxy2
+You can use the Net::HTTP lib to fetch page or use the phantom_client 
+(see: https://github.com/experteer/phantom_client).
 
-## Usage
+Monitoring(1.1.0):
+The phantom_proxy comes with a usage monitor.
+You can see the current proxy status by pointing your browser to
+	phantom_proxy_control_panel
+if you have set the proxy or just to the address and port the proxy is running at
+	address:port/phantom_proxy_control_panel
 
-TODO: Write usage instructions here
+Security(1.2.0)
+Now the phantom_proxy can be secured with a key. The system is implemented with an hmac algorithm.
+Simply supply "-hmac THE_KEY" when starting the proxy and the proxy is secured
 
-## Contributing
+Service script(1.2.1)
+In lib/phantom_proxy/install you can find an init.d script which makes it pretty easy to use phantom_proxy as a service with variable configured instances.
+A howto on the config of the services can be found in the init script.
 
-1. Fork it ( https://github.com/[my-github-username]/phantom_proxy2/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+Service script(1.2.10)
+Added an example script fixed alot of bugs from previous versions
+To succesfully run the service you have to create the following directories and files
+mkdir /etc/phantom_proxy
+mkdir /etc/phantom_proxy/config or place a config file there
+If you created config as a directory place your config files in there. In the install dir you find an example script for this.
+
+Inside phproxy you have to set PP_USER_STANDARD and PP_USER to the user you want to run the as or set this variable inside the proxy script.
+
+== TODO
