@@ -1,4 +1,4 @@
-module PhantomProxy2
+module PhantomProxy
   class AppRouterBase
 
     extend Jsonizer
@@ -44,20 +44,20 @@ module PhantomProxy2
     end
 
     def self.call(env)
-      PhantomProxy2::StatusInfo.connections+=1
+      PhantomProxy::StatusInfo.connections+=1
       print_ram_usage("RAM USAGE Before")
       result=router.call(env)
       print_ram_usage("RAM USAGE After")
-      PhantomProxy2::StatusInfo.connections-=1
+      PhantomProxy::StatusInfo.connections-=1
       result
     end
 
     def self.print_ram_usage(text)
-      PhantomProxy2.logger.info "#{text}[#{Process.pid}]: " + `pmap #{Process.pid} | tail -1`[10,40].strip
+      PhantomProxy.logger.info "#{text}[#{Process.pid}]: " + `pmap #{Process.pid} | tail -1`[10,40].strip
     end
 
     def self.call_controller(options, env)
-      options[:controller].respond_to?(options[:function]) ? options[:controller].send(options[:function], env) : PhantomProxy2.const_get(options[:controller]).new(env).send(options[:function])
+      options[:controller].respond_to?(options[:function]) ? options[:controller].send(options[:function], env) : PhantomProxy.const_get(options[:controller]).new(env).send(options[:function])
     end
 
     private

@@ -1,4 +1,4 @@
-module PhantomProxy2
+module PhantomProxy
   class StatusApi < AppRouterBase
     get "/phantom_proxy_control_panel(.:format)", :status_page
 

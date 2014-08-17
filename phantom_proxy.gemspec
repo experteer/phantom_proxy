@@ -1,15 +1,15 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'phantom_proxy2/version'
+require 'phantom_proxy/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "phantom_proxy2"
-  spec.version       = PhantomProxy2::VERSION
+  spec.name          = "phantom_proxy"
+  spec.version       = PhantomProxy::VERSION
   spec.authors       = ["Suddani"]
   spec.email         = ["suddani@googlemail.com"]
-  spec.summary       = "sdgdfg"
-  spec.description   = "dsfsdfg"
+  spec.summary       = "This is a phantomjs Proxy"
+  spec.description   = "This is a phyntonjs Proxy it allows you to fetch webpages and execute javascript in them."
   spec.homepage      = ""
   spec.license       = "MIT"
 

@@ -1,12 +1,12 @@
 require 'tempfile'
 
-module PhantomProxy2
+module PhantomProxy
   class PhantomJS
     attr_accessor :dom
     attr_accessor :image
     attr_accessor :ready
 
-    include ::PhantomProxy2::Logable
+    include ::PhantomProxy::Logable
   
     def initialize()
       @ready = 503
@@ -43,7 +43,7 @@ module PhantomProxy2
         end
       end
       
-      @dom = invokePhantomJS(PhantomProxy2.script_path, [picture, loadFrames, "\""+url+"\"", url_args_.length, url_args])
+      @dom = invokePhantomJS(PhantomProxy.script_path, [picture, loadFrames, "\""+url+"\"", url_args_.length, url_args])
       
       logger.info("Opened page: "+ /Open page: (.*?) END/.match(@dom)[1])
       
@@ -95,7 +95,7 @@ module PhantomProxy2
       logger.info("Call phantomJS with: "+argString)
       out = ""
 
-      IO.popen(PhantomProxy2.phantomjs_bin+" --ignore-ssl-errors=yes --web-security=false "+script+argString) {|io|
+      IO.popen(PhantomProxy.phantomjs_bin+" --ignore-ssl-errors=yes --web-security=false "+script+argString) {|io|
         out = io.readlines.join
       }
       #logger.info("PHANTOMJS_OUT: "+out)

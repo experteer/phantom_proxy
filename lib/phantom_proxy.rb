@@ -1,4 +1,4 @@
-require "phantom_proxy2/version"
+require "phantom_proxy/version"
 
 #libs
 require 'tempfile'
@@ -16,30 +16,30 @@ require 'goliath/api'
 require 'hmac-md5'
 
 # Helper
-require 'phantom_proxy2/helper/logable'
-require 'phantom_proxy2/helper/jsonizer'
-require 'phantom_proxy2/helper/template_renderer'
-require 'phantom_proxy2/helper/status_info'
-require 'phantom_proxy2/helper/http'
+require 'phantom_proxy/helper/logable'
+require 'phantom_proxy/helper/jsonizer'
+require 'phantom_proxy/helper/template_renderer'
+require 'phantom_proxy/helper/status_info'
+require 'phantom_proxy/helper/http'
 
 # PhantomJS
-require 'phantom_proxy2/phantomjs/phantomjs'
+require 'phantom_proxy/phantomjs/phantomjs'
 
 # Router
-require 'phantom_proxy2/router/app_router'
+require 'phantom_proxy/router/app_router'
 
 # API
-require 'phantom_proxy2/status/status_api'
-require 'phantom_proxy2/proxy/proxy_api'
+require 'phantom_proxy/status/status_api'
+require 'phantom_proxy/proxy/proxy_api'
 
-require 'phantom_proxy2/service'
+require 'phantom_proxy/service'
 
-PHANTOMPROXY2_ROOT=Dir.pwd
-PHANTOMPROXY2_GEM_DIR = File.join(File.dirname(__FILE__), "../")
+PHANTOMPROXY_ROOT=Dir.pwd
+PHANTOMPROXY_GEM_DIR = File.join(File.dirname(__FILE__), "../")
 
-module PhantomProxy2
+module PhantomProxy
   def self.script_path
-    @script_path||=root_gem.join("lib/phantom_proxy2/scripts/proxy.js").to_s
+    @script_path||=root_gem.join("lib/phantom_proxy/scripts/proxy.js").to_s
   end
 
   def self.phantomjs_bin
@@ -47,11 +47,11 @@ module PhantomProxy2
   end
 
   def self.root
-    @root ||= Pathname.new(PHANTOMPROXY2_ROOT)
+    @root ||= Pathname.new(PHANTOMPROXY_ROOT)
   end
 
   def self.root_gem
-    @root_gem ||= Pathname.new(PHANTOMPROXY2_GEM_DIR)
+    @root_gem ||= Pathname.new(PHANTOMPROXY_GEM_DIR)
   end
 
   def self.logger=(obj)
@@ -59,7 +59,7 @@ module PhantomProxy2
   end
 
   def self.logger
-    Thread.current[:in_fiber_logger] ||= PhantomProxy2Logger.new((@logger||Logger.new(STDOUT)),Logable.next_id)
+    Thread.current[:in_fiber_logger] ||= PhantomProxyLogger.new((@logger||Logger.new(STDOUT)),Logable.next_id)
   end
 
   def self.hmac_key

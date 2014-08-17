@@ -1,6 +1,6 @@
-module PhantomProxy2
+module PhantomProxy
 
-  class PhantomProxy2Logger
+  class PhantomProxyLogger
     def initialize logger, req_id
       @logger=logger
       @req_id=req_id
@@ -21,7 +21,7 @@ module PhantomProxy2
 
   module Logable
     def logger
-      @logger ||= PhantomProxy2.logger
+      @logger ||= PhantomProxy.logger
     end
 
     def logger=(_logger)

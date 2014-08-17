@@ -1,4 +1,4 @@
-module PhantomProxy2
+module PhantomProxy
   module Jsonizer
     def json_var(*var_names)
       @json_vars = (@json_vars||[])+var_names.flatten

@@ -1,4 +1,4 @@
-module PhantomProxy2
+module PhantomProxy
   class ProxyApi < AppRouterBase
     get "/*path", :handle_proxy_request
     get "/", :handle_proxy_request
@@ -10,9 +10,9 @@ module PhantomProxy2
 
     private
       def handle_proxy_request
-        return Http.NotAuthorized unless !PhantomProxy2.hmac_key || check_request_security
+        return Http.NotAuthorized unless !PhantomProxy.hmac_key || check_request_security
         phJS = PhantomJS.new
-        PhantomProxy2.wait_for(lambda {
+        PhantomProxy.wait_for(lambda {
           phJS.getUrl(canonical_url, as_image?, iframes?)
         })
         return image_response(phJS) if as_image?
@@ -36,11 +36,11 @@ module PhantomProxy2
       end
 
       def iframes?
-        env["HTTP_GET_PAGE_WITH_IFRAMES"] == "true" || PhantomProxy2.always_iframe?
+        env["HTTP_GET_PAGE_WITH_IFRAMES"] == "true" || PhantomProxy.always_iframe?
       end
 
       def as_image?
-        env["HTTP_GET_PAGE_AS_IMAGE"] == "true" || PhantomProxy2.always_image?
+        env["HTTP_GET_PAGE_AS_IMAGE"] == "true" || PhantomProxy.always_image?
       end
 
       def https?
@@ -66,7 +66,7 @@ module PhantomProxy2
         
         client_time= Time.parse(hmac_time)
         remote_time= Time.now
-        remote_key = PhantomProxy2.hmac_key.update(env['REQUEST_URI']+env['HTTP_HMAC_TIME']).hexdigest
+        remote_key = PhantomProxy.hmac_key.update(env['REQUEST_URI']+env['HTTP_HMAC_TIME']).hexdigest
 
         if (hmac_hash != remote_key || (remote_time-client_time).abs > 120)
           # control_panel.add_special_request "@did not pass security check"

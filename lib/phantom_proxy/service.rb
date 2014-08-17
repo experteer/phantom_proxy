@@ -1,4 +1,4 @@
-module PhantomProxy2
+module PhantomProxy
   class Service < Goliath::API
     use Goliath::Rack::Params
 

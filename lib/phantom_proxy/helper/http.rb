@@ -1,4 +1,4 @@
-module PhantomProxy2
+module PhantomProxy
   module Http
     def self.renderer
       @@renderer||=TemplateRenderer.create(binding)

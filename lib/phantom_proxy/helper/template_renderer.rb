@@ -1,4 +1,4 @@
-module PhantomProxy2
+module PhantomProxy
   class ReloadTemplateRenderer
     def initialize(binding_)
       @binding = binding_
@@ -11,7 +11,7 @@ module PhantomProxy2
 
   class TemplateRenderer
     def self.create(binding_)
-      (PhantomProxy2.respond_to?(:env) && PhantomProxy2.env == :production) ? TemplateRenderer.new(binding_) : ReloadTemplateRenderer.new(binding_)
+      (PhantomProxy.respond_to?(:env) && PhantomProxy.env == :production) ? TemplateRenderer.new(binding_) : ReloadTemplateRenderer.new(binding_)
     end
 
     def initialize(controller_binding_)
@@ -30,9 +30,9 @@ module PhantomProxy2
 
     def template(template_name)
       begin
-        templates[template_name]||=::ERB.new(File.read(PhantomProxy2.root.join("views", "#{template_name}.erb")))
+        templates[template_name]||=::ERB.new(File.read(PhantomProxy.root.join("views", "#{template_name}.erb")))
       rescue Errno::ENOENT => e
-        templates[template_name]||=::ERB.new(File.read(PhantomProxy2.root_gem.join("templates/views", "#{template_name}.erb")))
+        templates[template_name]||=::ERB.new(File.read(PhantomProxy.root_gem.join("templates/views", "#{template_name}.erb")))
       end
     end
 

@@ -1,4 +1,4 @@
-module PhantomProxy2
+module PhantomProxy
   module StatusInfo
     def self.boot_up
       @start_time=Time.now
