@@ -45,7 +45,7 @@ module PhantomProxy
     runner.api = PhantomProxy::Service.new
     runner.app = Goliath::Rack::Builder.build(PhantomProxy::Service, runner.api)
 
-    puts "Now starting PhantomProxy2 #{PhantomProxy::VERSION}...."
+    puts "Now starting PhantomProxy #{PhantomProxy::VERSION}...."
     runner.run
   end
 end
