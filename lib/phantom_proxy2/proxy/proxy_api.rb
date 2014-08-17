@@ -1,7 +1,7 @@
 module PhantomProxy2
   class ProxyApi < AppRouterBase
-    get "/", :handle_proxy_request
     get "/*path", :handle_proxy_request
+    get "/", :handle_proxy_request
 
     put "*any", :next_api
     delete "*any", :next_api
@@ -32,7 +32,7 @@ module PhantomProxy2
       end
 
       def path
-        env[:nil] ? env[nil][:path] : ""
+        env[nil] ? env[nil][:path] : ""
       end
 
       def iframes?
@@ -56,7 +56,7 @@ module PhantomProxy2
       end
 
       def canonical_url
-        ["#{protocoll}://#{host}",path].join
+        [canonical_path, env["params"] ? env["params"].map{|k,v| "#{k}=#{v}"}.join('&') : nil].join("?")
       end
 
       def check_request_security
