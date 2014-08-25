@@ -1,5 +1,6 @@
 module PhantomProxy
   class ProxyApi < AppRouterBase
+    get "/favicon.ico", :next_api
     get "/*path", :handle_proxy_request
     get "/", :handle_proxy_request
 
