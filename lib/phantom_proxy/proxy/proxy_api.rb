@@ -28,7 +28,11 @@ module PhantomProxy
       end
 
       def host
-        env['SERVER_NAME']
+        if https?
+          env['SERVER_NAME']
+        else
+          env['HTTP_HOST']
+        end
       end
 
       def path

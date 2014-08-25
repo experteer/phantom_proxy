@@ -30,7 +30,7 @@ module PhantomProxy
       end
     end
     PhantomProxy.logger    = Logger.new(options[:log_file]) if options[:log_file]
-    PhantomProxy.hmac_key  = options[:hmac_key] if options[:hmac_key]
+    PhantomProxy.hmac_key  = options[:hmac_key] if options[:hmac_key] && options[:hmac_key] != "none"
     remaining
   end
   def self.run_phantom_proxy(args)
