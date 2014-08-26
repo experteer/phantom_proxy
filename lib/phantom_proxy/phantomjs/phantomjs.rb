@@ -45,7 +45,7 @@ module PhantomProxy
       
       @dom = invokePhantomJS(PhantomProxy.script_path, [picture, loadFrames, "\""+url+"\"", url_args_.length, url_args])
       
-      logger.info("Opened page: "+ /Open page: (.*?) END/.match(@dom)[1])
+      #logger.info("Opened page: "+ /Open page: (.*?) END/.match(@dom)[1])
       
       @ready = 503
       dom_text = "Failed to load page"
