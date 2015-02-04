@@ -86,6 +86,14 @@ module PhantomProxy
     @always_iframe=obj
   end
 
+  def self.threadpool_size=(obj)
+    @threadpool_size=obj.to_i
+  end
+
+  def self.threadpool_size
+    @threadpool_size
+  end
+
   def self.wait_for(op = nil)
     fiber = Fiber.current
     EM.defer(op, Proc.new {|result|

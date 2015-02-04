@@ -17,6 +17,9 @@ module PhantomProxy
         # PhantomProxy2.hmac_key = hmac
         options[:hmac_key] = hmac
       end
+      opts.on('--threadpool_size [INTEGER]', 'Specify this value to use a specific threadpool_size' ) do |threadpool_size|
+        options[:threadpool_size] = threadpool_size
+      end
     end
     args = ARGV.dup
     remaining = []
@@ -29,12 +32,16 @@ module PhantomProxy
         retry
       end
     end
-    PhantomProxy.logger    = Logger.new(options[:log_file]) if options[:log_file]
-    PhantomProxy.hmac_key  = options[:hmac_key] if options[:hmac_key] && options[:hmac_key] != "none"
+    PhantomProxy.logger           = Logger.new(options[:log_file]) if options[:log_file]
+    PhantomProxy.hmac_key         = options[:hmac_key] if options[:hmac_key] && options[:hmac_key] != "none"
+    PhantomProxy.threadpool_size  = options[:threadpool_size] if options[:threadpool_size]
     remaining
   end
   def self.run_phantom_proxy(args)
     puts "Run with #{args}"
+
+    EM.threadpool_size = PhantomProxy.threadpool_size if PhantomProxy.threadpool_size
+
     runner = Goliath::Runner.new(args, nil)
     runner.logger=PhantomProxy.logger
     runner.port = PhantomProxy.port if PhantomProxy.respond_to?(:port)
