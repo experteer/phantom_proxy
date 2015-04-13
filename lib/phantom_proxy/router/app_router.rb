@@ -53,7 +53,7 @@ module PhantomProxy
     end
 
     def self.print_ram_usage(text)
-      PhantomProxy.logger.info "#{text}[#{Process.pid}]: " + `pmap #{Process.pid} | tail -1`[10,40].strip
+      # PhantomProxy.logger.info "#{text}[#{Process.pid}]: " + `pmap #{Process.pid} | tail -1`[10,40].strip
     end
 
     def self.call_controller(options, env)
