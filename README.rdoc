@@ -3,10 +3,10 @@ The phantom proxy acts as a http proxy server. It fetches the remote webpages
 with the help phantomjs (see http://www.phantomjs.org/ ).
 
 You can use this to get a page after the javascipt execution. By setting some HTTP
-headers you can get the page with all iframes included or as an image. 
+headers you can get the page with all iframes included or as an image.
 
 == Installation
-Install phanotmjs (see: http://code.google.com/p/phantomjs/wiki/BuildInstructions)
+Install phanotmjs (see: http://code.google.com/p/phantomjs/wiki/BuildInstruction, http://phantomjs.org/download.html)
 
 On Debian:
 
@@ -17,21 +17,21 @@ On Debian:
  qmake-qt4 && make
 
  checkout phantom_proxy
- 
+
  gem build phantom_proxy.gemspec
 
  gem install phantom_proxy-*.gem
-         
+
 == Usage
 Run
- phantom_proxy 
+ phantom_proxy
 either with -self (ip, port) to not use the thin::runner framework
 or
 with any thin parameter you want (e.g. -p 8080).
 
 Point your browser's proxy to http://localhost:8080 for testting.
 
-You can use the Net::HTTP lib to fetch page or use the phantom_client 
+You can use the Net::HTTP lib to fetch page or use the phantom_client
 (see: https://github.com/experteer/phantom_client).
 
 Monitoring(1.1.0):
@@ -57,5 +57,8 @@ mkdir /etc/phantom_proxy/config or place a config file there
 If you created config as a directory place your config files in there. In the install dir you find an example script for this.
 
 Inside phproxy you have to set PP_USER_STANDARD and PP_USER to the user you want to run the as or set this variable inside the proxy script.
+
+Phantomjs2.1.1(1.4.0)
+The proxy now neew phantomjs 2.1.1
 
 == TODO
